@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eve's Wardrobe Rescue — pre-loved, re-loved</title>
+<meta name="description" content="Send me your pre-loved clothes. I sell them on Vinted. You keep half, a charity you choose gets a fifth, and I do all the work.">
+
+<!-- ============================================================
+     FONTS
+     Pacifico  = the cursive "Eve" in the logo (used ONCE, on purpose)
+     Fraunces  = big friendly headings
+     Karla     = normal reading text
+     Space Mono = tiny label text, like the writing on a clothes tag
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   1. VARIABLES — change a colour here and it changes everywhere
+   ============================================================ */
+:root {
+  --ink:        #1E2230;   /* main text — a deep blue-black, softer than pure black */
+  --ink-soft:   #6B7285;   /* quieter text */
+  --paper:      #F1F4F9;   /* page background, like tissue paper in a parcel */
+  --card:       #FFFFFF;
+  --line:       #DDE2EC;
+
+  /* The five rainbow colours from the logo. Each section gets one, */
+  /* so scrolling down the page walks through the rainbow in order. */
+  --red:    #E0533D;
+  --orange: #F0A03A;
+  --yellow: #F2CF4A;
+  --green:  #4A9D5F;
+  --blue:   #4A7FD4;
+
+  --accent: var(--red);    /* each section overrides this */
+  --radius: 14px;
+  --shadow: 0 2px 0 var(--line);
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Karla', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); }
+h3 { font-size: 1.15rem; }
+p  { margin: 0 0 1em; }
+a  { color: var(--ink); }
+
+/* Everyone can see where they are when tabbing with a keyboard */
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.wrap { width: min(1040px, 100% - 3rem); margin-inline: auto; }
+
+section { padding: 4.5rem 0; }
+
+/* The tiny mono label above each heading — like the size tag in a jumper */
+.eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.eyebrow::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0.35;
+}
+
+.lede { font-size: 1.1rem; color: var(--ink-soft); max-width: 58ch; }
+
+/* ============================================================
+   3. HEADER
+   ============================================================ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(241, 244, 249, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+}
+.brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; }
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.1;
+}
+.brand-motto {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.site-nav { display: flex; gap: 1.4rem; }
+.site-nav a {
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+.site-nav a:hover { border-bottom-color: var(--red); }
+@media (max-width: 720px) { .site-nav { display: none; } }
+
+/* ============================================================
+   4. HERO
+   ============================================================ */
+.hero { padding: 3.5rem 0 4rem; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.hero h1 span { color: var(--red); }
+.hero-sub { font-size: 1.2rem; max-width: 40ch; }
+
+.buttons { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.8rem; }
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  transition: transform 0.15s ease;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-solid { background: var(--ink); color: var(--paper); }
+.btn-ghost { background: transparent; color: var(--ink); }
+
+@media (max-width: 820px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .hero-art { order: -1; max-width: 260px; margin-inline: auto; }
+}
+
+/* ============================================================
+   5. THE SPLIT — three coloured blocks + a calculator
+   ============================================================ */
+#split { --accent: var(--orange); }
+
+.split-bar {
+  display: flex;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  margin-bottom: 2rem;
+}
+.split-part {
+  padding: 1.4rem 1.2rem;
+  color: var(--ink);
+}
+.split-part strong {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  line-height: 1;
+}
+.split-part span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.part-seller  { flex: 50; background: var(--yellow); }
+.part-eve     { flex: 30; background: var(--orange); }
+.part-charity { flex: 20; background: var(--green); color: #fff; }
+
+@media (max-width: 640px) {
+  .split-bar { flex-direction: column; }
+  .split-part { flex: none; }
+}
+
+/* The calculator is styled like a swing tag on a piece of clothing */
+.tag {
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  max-width: 460px;
+}
+.tag label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.tag input {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.tag-rows { margin-top: 1.2rem; }
+.tag-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.tag-row:last-child { border-bottom: none; }
+.tag-row b { font-family: 'Fraunces', serif; font-size: 1.25rem; }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.5rem; }
+
+/* ============================================================
+   6. HOW IT WORKS — a real sequence, so real numbers
+   ============================================================ */
+#how { --accent: var(--yellow); }
+
+.steps { display: grid; gap: 1rem; margin-top: 2rem; }
+.step {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr;
+  gap: 1.2rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.3rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+.step-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+.step h3 { margin-bottom: 0.25rem; }
+.step p { margin: 0; color: var(--ink-soft); font-size: 0.97rem; }
+
+/* ============================================================
+   7. THE CARE LABEL — the signature bit of the whole page
+   Made to look like the little sewn-in label inside a jumper
+   ============================================================ */
+#rules { --accent: var(--green); }
+
+.label {
+  background: #FBFAF6;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 2rem;
+  position: relative;
+  max-width: 780px;
+  margin: 2rem auto 0;
+  font-family: 'Space Mono', monospace;
+}
+/* the dashed line is the "stitching" holding the label in */
+.label::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed #B9B4A4;
+  border-radius: 3px;
+  pointer-events: none;
+}
+.label-top {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  border-bottom: 1px solid #D9D4C4;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.4rem;
+}
+.label-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.label-cols h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.9rem;
+}
+.label-cols ul { list-style: none; margin: 0; padding: 0; font-size: 0.82rem; line-height: 2; }
+.label-cols li::before { margin-right: 0.5rem; font-weight: 700; }
+.yes h3 { color: var(--green); }
+.yes li::before { content: "✓"; color: var(--green); }
+.no h3 { color: var(--red); }
+.no li::before { content: "✕"; color: var(--red); }
+
+.label-note {
+  margin-top: 1.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid #D9D4C4;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  text-align: center;
+}
+@media (max-width: 640px) { .label-cols { grid-template-columns: 1fr; gap: 1.4rem; } }
+
+/* ============================================================
+   8. CHARITY CARDS
+   ============================================================ */
+#charity { --accent: var(--blue); }
+
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--card-colour, var(--blue));
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.card .badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--card-colour);
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.card p { font-size: 0.94rem; color: var(--ink-soft); margin-bottom: 0; }
+@media (max-width: 820px) { .cards { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   9. TRACKER — one big number, counted up as you scroll to it
+   ============================================================ */
+.tracker {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+.tracker .eyebrow { color: var(--yellow); justify-content: center; }
+.tracker .eyebrow::after { display: none; }
+.big-number {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1;
+  margin: 0.5rem 0;
+}
+.tracker-note { font-size: 0.9rem; opacity: 0.75; margin: 0; }
+.tracker-split {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 2rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   10. UNSOLD — the 60 day choice
+   ============================================================ */
+#unsold { --accent: var(--red); }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 2rem; }
+.choice {
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+}
+.choice .letter {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+.choice p { margin-bottom: 0; color: var(--ink-soft); font-size: 0.95rem; }
+@media (max-width: 640px) { .choices { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   11. ABOUT + CONTACT
+   ============================================================ */
+#about { --accent: var(--orange); }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+@media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+.quote {
+  font-family: 'Fraunces', serif;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  border-left: 4px solid var(--orange);
+  padding-left: 1.2rem;
+  margin: 0;
+}
+
+#contact { --accent: var(--green); }
+.form { max-width: 560px; margin-top: 2rem; }
+.field { margin-bottom: 1.1rem; }
+.field label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.field input, .field textarea, .field select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  font-family: 'Karla', sans-serif;
+  font-size: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--ink);
+}
+.field textarea { min-height: 120px; resize: vertical; }
+.form-note { font-size: 0.85rem; color: var(--ink-soft); }
+
+/* ============================================================
+   12. FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 2.5rem 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.rainbow-rule { height: 6px; display: flex; }
+.rainbow-rule div { flex: 1; }
+
+/* ============================================================
+   13. MOTION — gentle, and switched off for anyone who asks
+   ============================================================ */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.shown { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <!-- small version of the logo -->
+      <svg width="44" height="44" viewBox="0 0 160 160" aria-hidden="true">
+        <circle cx="80" cy="80" r="70" fill="none" stroke="#1E2230" stroke-width="6"/>
+        <g fill="none" stroke-width="11" stroke-linecap="round">
+          <path d="M22,98 A58,58 0 0 1 138,98" stroke="#E0533D"/>
+          <path d="M32,98 A48,48 0 0 1 128,98" stroke="#F0A03A"/>
+          <path d="M42,98 A38,38 0 0 1 118,98" stroke="#F2CF4A"/>
+          <path d="M52,98 A28,28 0 0 1 108,98" stroke="#4A9D5F"/>
+          <path d="M62,98 A18,18 0 0 1 98,98" stroke="#4A7FD4"/>
+        </g>
+        <text x="80" y="138" text-anchor="middle" font-family="Pacifico, cursive" font-size="34" fill="#1E2230">Eve</text>
+      </svg>
+      <span>
+        <span class="brand-name">Eve's Wardrobe Rescue</span><br>
+        <span class="brand-motto">pre-loved, re-loved</span>
+      </span>
+    </a>
+    <nav class="site-nav">
+      <a href="#how">How it works</a>
+      <a href="#rules">What to send</a>
+      <a href="#charity">Charities</a>
+      <a href="#contact">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<main id="top">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Second-hand clothes, sold for you</p>
+      <h1>Your old clothes are <span>somebody's</span> favourite thing.</h1>
+      <p class="hero-sub">Send me the clothes you've stopped wearing. I photograph them, list them on Vinted, answer the messages and post the parcels. You keep half the money, a charity you pick gets a fifth, and you never touch a packing tape roll.</p>
+      <div class="buttons">
+        <a class="btn btn-solid" href="#how">See how it works</a>
+        <a class="btn btn-ghost" href="#contact">Send me your clothes</a>
+      </div>
+    </div>
+
+    <!-- big logo -->
+    <div class="hero-art">
+      <svg width="100%" viewBox="0 0 200 200" role="img" aria-labelledby="logoTitle">
+        <title id="logoTitle">Eve's Wardrobe Rescue logo: a rainbow inside a circle, above the name Eve</title>
+        <circle cx="100" cy="100" r="88" fill="#FFFFFF" stroke="#1E2230" stroke-width="6"/>
+        <g fill="none" stroke-width="14" stroke-linecap="round" class="arcs">
+          <path d="M27,122 A73,73 0 0 1 173,122" stroke="#E0533D"/>
+          <path d="M40,122 A60,60 0 0 1 160,122" stroke="#F0A03A"/>
+          <path d="M53,122 A47,47 0 0 1 147,122" stroke="#F2CF4A"/>
+          <path d="M66,122 A34,34 0 0 1 134,122" stroke="#4A9D5F"/>
+          <path d="M79,122 A21,21 0 0 1 121,122" stroke="#4A7FD4"/>
+        </g>
+        <text x="100" y="170" text-anchor="middle" font-family="Pacifico, cursive" font-size="42" fill="#1E2230">Eve</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THE SPLIT ========== -->
+<section id="split">
+  <div class="wrap reveal">
+    <p class="eyebrow">Where the money goes</p>
+    <h2>Every sale splits three ways.</h2>
+    <p class="lede">No hidden fees, no small print. Type a price into the tag below and watch it divide itself up.</p>
+
+    <div class="split-bar" style="margin-top:2rem">
+      <div class="split-part part-seller"><strong>50%</strong><span>To you</span></div>
+      <div class="split-part part-eve"><strong>30%</strong><span>To me, for the work</span></div>
+      <div class="split-part part-charity"><strong>20%</strong><span>To your charity</span></div>
+    </div>
+
+    <!-- Calculator. All the maths happens in the script at the bottom. -->
+    <div class="tag">
+      <label for="price">If an item sells for…</label>
+      <input type="number" id="price" value="20" min="0" step="0.50" inputmode="decimal">
+      <div class="tag-rows">
+        <div class="tag-row"><span><i class="dot" style="background:var(--yellow)"></i>You keep</span><b id="out-seller">£10.00</b></div>
+        <div class="tag-row"><span><i class="dot" style="background:var(--orange)"></i>I keep</span><b id="out-eve">£6.00</b></div>
+        <div class="tag-row"><span><i class="dot" style="background:var(--green)"></i>Your charity gets</span><b id="out-charity">£4.00</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section id="how">
+  <div class="wrap reveal">
+    <p class="eyebrow">Step by step</p>
+    <h2>How it works</h2>
+    <p class="lede">Five steps. You do two of them.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Message me</h3>
+          <p>Tell me roughly what you've got and send a few photos. I'll tell you honestly what's likely to sell and what isn't, before you post anything.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Check it against the label</h3>
+          <p>Have a proper look at each item in daylight, using the checklist below. This is the step that decides whether your clothes sell for a good price or sit there.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Post it to me</h3>
+          <p>I'll send you the address privately once we've agreed. Pop in a note saying which charity you'd like your 20% to go to.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h3>I do the boring bit</h3>
+          <p>Photographing, measuring, writing descriptions, pricing, answering questions, haggling politely, packing and posting. This is the part that takes hours, and it's the part you're paying me 30% for.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <h3>You get paid</h3>
+          <p>Within five days of the money clearing on Vinted, I send you your 50% and send your charity its 20%. I'll show you the sale so you can see the price for yourself.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THE CARE LABEL ========== -->
+<section id="rules">
+  <div class="wrap reveal">
+    <p class="eyebrow">Read this before you post</p>
+    <h2>What I can and can't sell.</h2>
+    <p class="lede">Vinted buyers leave honest reviews. One item with a stain on it can damage the rating that every other seller on this page depends on — so please check carefully. If you're not sure, send a photo and ask.</p>
+
+    <div class="label">
+      <div class="label-top">EVE'S WARDROBE RESCUE — QUALITY CHECK — PLEASE READ BEFORE POSTING</div>
+      <div class="label-cols">
+        <div class="yes">
+          <h3>PLEASE SEND</h3>
+          <ul>
+            <li>Clean and freshly washed</li>
+            <li>All buttons, zips and clasps working</li>
+            <li>Shape still good, no sagging</li>
+            <li>Colour still strong</li>
+            <li>Brand label still readable</li>
+            <li>Anything you'd happily buy yourself</li>
+          </ul>
+        </div>
+        <div class="no">
+          <h3>PLEASE DON'T SEND</h3>
+          <ul>
+            <li>Stains, marks or discolouring</li>
+            <li>Holes, rips or unravelling seams</li>
+            <li>Broken zips or missing buttons</li>
+            <li>Bobbling or pilling</li>
+            <li>Stretched cuffs or necklines</li>
+            <li>Smoke, damp or perfume smells</li>
+            <li>Faded or heavily washed-out colour</li>
+            <li>Counterfeit or fake designer items</li>
+          </ul>
+        </div>
+      </div>
+      <p class="label-note">ANYTHING THAT ARRIVES IN UNSELLABLE CONDITION WILL BE PASSED TO A TEXTILE RECYCLING BANK RATHER THAN LISTED. I'LL ALWAYS TELL YOU IF THIS HAPPENS.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CHARITY ========== -->
+<section id="charity">
+  <div class="wrap reveal">
+    <p class="eyebrow">You choose</p>
+    <h2>Pick where your 20% goes.</h2>
+    <p class="lede">Every seller chooses their own cause when they send their parcel. Three options, because more than three makes it hard to decide.</p>
+
+    <div class="cards">
+      <div class="card" style="--card-colour: var(--blue)">
+        <span class="badge">Option one</span>
+        <h3>Coding kits for schools</h3>
+        <p>Computers, micro:bits and coding club equipment for schools that can't afford them. I picked this one because learning to code is the reason this website exists.</p>
+      </div>
+      <div class="card" style="--card-colour: var(--red)">
+        <span class="badge">Option two</span>
+        <h3>Technology for girls</h3>
+        <p>Programmes that get girls into computing, engineering and making things — mentoring, workshops and kit.</p>
+      </div>
+      <div class="card" style="--card-colour: var(--green)">
+        <span class="badge">Option three</span>
+        <h3>Christmas gifts for kids</h3>
+        <p>Toys and presents for children whose families can't stretch to them at Christmas. Every parcel of clothes turns into a present under someone's tree.</p>
+      </div>
+    </div>
+
+    <p class="form-note" style="margin-top:1.5rem">
+      <strong>To do:</strong> replace each description above with the name of a real registered charity and its registration number, and link to its website.
+    </p>
+
+    <!-- Charity tracker -->
+    <div class="tracker">
+      <p class="eyebrow">Raised so far</p>
+      <div class="big-number" id="total" data-target="0">£0</div>
+      <p class="tracker-note">Updated at the end of every month. Last updated: <span id="updated">—</span></p>
+      <div class="tracker-split">
+        <span>CODING KITS £0</span>
+        <span>TECH FOR GIRLS £0</span>
+        <span>CHRISTMAS GIFTS £0</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== IF IT DOESN'T SELL ========== -->
+<section id="unsold">
+  <div class="wrap reveal">
+    <p class="eyebrow">After 60 days</p>
+    <h2>What if something doesn't sell?</h2>
+    <p class="lede">Some things just don't find a buyer, however good they are. If an item is still listed after 60 days, I'll message you and you choose what happens next. Nothing gets thrown away, and I never decide for you.</p>
+
+    <div class="choices">
+      <div class="choice">
+        <div class="letter">A</div>
+        <h3>Send it back to me</h3>
+        <p>I'll pack it up and post it home. You cover the return postage, and I'll tell you exactly what it costs before I send it.</p>
+      </div>
+      <div class="choice">
+        <div class="letter">B</div>
+        <h3>Donate it to charity</h3>
+        <p>I'll take it to a charity shop and send you a photo of the donation. Free, and the clothes still do some good.</p>
+      </div>
+    </div>
+    <p class="form-note" style="margin-top:1.2rem">If I don't hear back within 14 days of asking, I'll go with option B and let you know.</p>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section id="about">
+  <div class="wrap about-grid reveal">
+    <div>
+      <p class="eyebrow">Who's behind this</p>
+      <h2>Hi, I'm Eve.</h2>
+      <p>I'm nine. I love technology and coding, and I built this entire website myself — the layout, the colours, the rainbow, the little calculator further up the page.</p>
+      <p>I started selling clothes for one person, a friend's mum, and it turned out I was quite good at it. So I'm doing it properly now: for other people, with a proper split, and with a chunk going to causes that get technology to kids who don't have it.</p>
+      <p class="form-note">My account is set up and supervised by a parent, because Vinted is for over-18s. They handle the money and the address. I do the selling.</p>
+    </div>
+    <div>
+      <p class="quote">"You're not just clearing out a wardrobe. You're buying a laptop for a school that doesn't have one."</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact">
+  <div class="wrap reveal">
+    <p class="eyebrow">Get started</p>
+    <h2>Send me your clothes.</h2>
+    <p class="lede">Fill this in and it'll open your email app with everything already written. I'll reply with the address and answer any questions first.</p>
+
+    <div class="form">
+      <div class="field">
+        <label for="name">Your name</label>
+        <input type="text" id="name" placeholder="Jo Bloggs">
+      </div>
+      <div class="field">
+        <label for="items">What have you got?</label>
+        <textarea id="items" placeholder="About 12 things — mostly women's tops and dresses, size 12, a few with tags still on."></textarea>
+      </div>
+      <div class="field">
+        <label for="cause">Which charity would you like?</label>
+        <select id="cause">
+          <option>Coding kits for schools</option>
+          <option>Technology for girls</option>
+          <option>Christmas gifts for kids</option>
+        </select>
+      </div>
+      <a class="btn btn-solid" id="send" href="#">Write my email</a>
+      <p class="form-note" style="margin-top:1.2rem">Or email me directly at <strong>hello@example.com</strong> — replace this with your real address.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ========== FOOTER ========== -->
+<div class="rainbow-rule">
+  <div style="background:var(--red)"></div>
+  <div style="background:var(--orange)"></div>
+  <div style="background:var(--yellow)"></div>
+  <div style="background:var(--green)"></div>
+  <div style="background:var(--blue)"></div>
+</div>
+<footer>
+  <div class="wrap">
+    <p><strong>Eve's Wardrobe Rescue</strong> — pre-loved, re-loved.</p>
+    <p>Items are listed on Vinted through an adult-supervised account, as Vinted requires all account holders to be 18 or over. Sale prices are set by me and shown to you. Charity payments are made monthly and totals are published on this page.</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   THE SPLIT CALCULATOR
+   Reads the price box, does the maths, writes the answers back.
+   ============================================================ */
+const priceBox = document.getElementById('price');
+
+function updateSplit() {
+  const price = parseFloat(priceBox.value) || 0;
+
+  const seller  = price * 0.50;
+  const eve     = price * 0.30;
+  const charity = price * 0.20;
+
+  document.getElementById('out-seller').textContent  = '£' + seller.toFixed(2);
+  document.getElementById('out-eve').textContent     = '£' + eve.toFixed(2);
+  document.getElementById('out-charity').textContent = '£' + charity.toFixed(2);
+}
+
+priceBox.addEventListener('input', updateSplit);
+updateSplit();
+
+/* ============================================================
+   THE CHARITY TOTAL
+   Change data-target="0" in the HTML each month. The number
+   counts up from zero when you scroll it into view.
+   ============================================================ */
+const totalEl = document.getElementById('total');
+const target = parseFloat(totalEl.dataset.target) || 0;
+
+function countUp() {
+  const duration = 1200;
+  const start = performance.now();
+
+  function frame(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    totalEl.textContent = '£' + Math.round(target * progress);
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================
+   SCROLL REVEALS
+   IntersectionObserver tells us when something scrolls into view.
+   ============================================================ */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('shown');
+    if (entry.target.contains(totalEl)) countUp();
+    observer.unobserve(entry.target);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ============================================================
+   THE CONTACT BUTTON
+   Builds an email from the form. No server needed, which is why
+   this whole site can live on GitHub Pages for free.
+   ============================================================ */
+document.getElementById('send').addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const name  = document.getElementById('name').value  || 'someone';
+  const items = document.getElementById('items').value || '(not filled in)';
+  const cause = document.getElementById('cause').value;
+
+  const subject = 'Clothes to sell — ' + name;
+  const body =
+    'Hi Eve,\n\n' +
+    'I would like you to sell some clothes for me.\n\n' +
+    'Name: ' + name + '\n\n' +
+    'What I have:\n' + items + '\n\n' +
+    'Charity I would like my 20% to go to: ' + cause + '\n\n' +
+    'Thanks!';
+
+  window.location.href =
+    'mailto:hello@example.com'
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body='    + encodeURIComponent(body);
+});
+
+/* Show today's date in the tracker until you set a real one */
+document.getElementById('updated').textContent =
+  new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+</script>
+
+</body>
+</html>
