@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check your status — Eve's Wardrobe Rescue</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Karla:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --ink: #1E2230;
+  --ink-soft: #6B7285;
+  --paper: #F1F4F9;
+  --card: #FFFFFF;
+  --line: #DDE2EC;
+  --red: #E0533D;
+  --green: #4A9D5F;
+  --blue: #4A7FD4;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Karla', system-ui, sans-serif;
+  padding: 2.5rem 1.2rem;
+}
+.wrap { max-width: 520px; margin: 0 auto; }
+h1 { font-family: 'Fraunces', serif; font-size: 1.8rem; text-align: center; margin-bottom: 0.3rem; }
+.sub { text-align: center; color: var(--ink-soft); margin-bottom: 2rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1.6rem; }
+label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+input {
+  width: 100%; padding: 0.7rem 0.9rem; border: 2px solid var(--line); border-radius: 8px;
+  font-size: 1rem; margin-bottom: 1rem; box-sizing: border-box; font-family: 'Karla', sans-serif;
+}
+button {
+  width: 100%; padding: 0.8rem; background: var(--ink); color: #fff; border: none;
+  border-radius: 999px; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+}
+button:disabled { opacity: 0.6; cursor: default; }
+.result { margin-top: 1.2rem; }
+.item {
+  background: #F9FAFC; border-radius: 10px; padding: 0.9rem; margin-bottom: 0.6rem;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;
+}
+.status-badge {
+  font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.7rem;
+  border-radius: 999px; font-weight: 700; text-transform: uppercase;
+}
+.detail { font-size: 0.78rem; color: var(--ink-soft); width: 100%; margin-top: 0.3rem; font-family: 'Space Mono', monospace; }
+.total { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px dashed var(--line); font-family: 'Fraunces', serif; font-size: 1.2rem; }
+.error { color: #A33D2A; background: #FDF3F1; border: 1px solid #F3D9D2; border-radius: 8px; padding: 0.9rem; margin-top: 1rem; font-size: 0.9rem; }
+.loading { text-align: center; color: var(--ink-soft); padding: 1rem; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Check your status</h1>
+  <p class="sub">Enter your name and code to see your items.</p>
+
+  <div class="card">
+    <label for="name">Your name</label>
+    <input type="text" id="name" placeholder="Laura Ward">
+    <label for="code">Your 4-digit code</label>
+    <input type="text" id="code" placeholder="e.g. 4821" maxlength="4">
+    <button id="lookupBtn">View my status</button>
+  </div>
+
+  <div id="output"></div>
+</div>
+
+<script>
+// PASTE YOUR WEB APP URL BETWEEN THE QUOTES BELOW
+const API_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+const statusColours = {
+  'Received':         { bg: '#FDF6E3', text: '#8A6D1D' },
+  'Listed':           { bg: '#EAF1FB', text: '#2C5AA8' },
+  'Awaiting Sale':    { bg: '#F1EAFB', text: '#5B4E8C' },
+  'Sold':             { bg: '#EAF6EC', text: '#2E6B3E' },
+  'Returned/Donated': { bg: '#F3F0EA', text: '#8A7A5C' },
+};
+
+const btn = document.getElementById('lookupBtn');
+const output = document.getElementById('output');
+
+btn.addEventListener('click', async () => {
+  const name = document.getElementById('name').value.trim();
+  const code = document.getElementById('code').value.trim();
+
+  if (!name || !code) {
+    output.innerHTML = '<div class="error">Please fill in both your name and code.</div>';
+    return;
+  }
+
+  if (API_URL.includes('PASTE_YOUR')) {
+    output.innerHTML = '<div class="error">This page isn\'t connected yet — the website owner needs to add their Apps Script URL.</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  output.innerHTML = '<div class="loading">Looking up your items…</div>';
+
+  try {
+    const url = `${API_URL}?name=${encodeURIComponent(name)}&code=${encodeURIComponent(code)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.found) {
+      output.innerHTML = '<div class="error">No match found. Double check your name and code, or ask Eve to resend it.</div>';
+      btn.disabled = false;
+      return;
+    }
+
+    let html = `<div class="card result"><h3 style="font-family:'Fraunces',serif; margin-top:0">${data.customerName}'s items</h3>`;
+
+    data.items.forEach(it => {
+      const style = statusColours[it.status] || { bg: '#eee', text: '#333' };
+      const label = it.brand ? `${it.brand} — ${it.description}` : it.description;
+      html += `<div class="item">
+        <span style="font-weight:600">${label}</span>
+        <span class="status-badge" style="background:${style.bg}; color:${style.text}">${it.status}</span>`;
+      if ((it.status === 'Sold' || it.status === 'Paid') && it.soldPrice) {
+        const verb = it.paid ? 'already paid' : 'you\'re owed';
+        html += `<span class="detail">Sold for £${it.soldPrice.toFixed(2)} → ${verb} £${it.customerShare.toFixed(2)}</span>`;
+      }
+      html += `</div>`;
+    });
+
+    html += `<div class="total">Owed to you now: £${data.totalOwed.toFixed(2)}</div>`;
+    if (data.totalPaid > 0) {
+      html += `<div class="detail" style="margin-top:0.4rem">Already paid: £${data.totalPaid.toFixed(2)}</div>`;
+    }
+    html += `</div>`;
+    output.innerHTML = html;
+  } catch (err) {
+    output.innerHTML = '<div class="error">Something went wrong loading your status. Please try again in a moment.</div>';
+  }
+
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>
