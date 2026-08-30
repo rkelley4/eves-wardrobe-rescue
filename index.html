@@ -509,7 +509,12 @@ footer {
       <a href="#rules">What to send</a>
       <a href="#charity">Charities</a>
       <a href="#contact">Get in touch</a>
-      <a href="status.html">Check status</a>
+      <a href="status.html">Check status</a>      <span style="position:relative; display:inline-block;">
+        <button id="settings-toggle" style="background:none; border:1px solid var(--line); border-radius:999px; padding:0.4rem 0.9rem; font-size:0.85rem; cursor:pointer; font-family:inherit;">
+          ⚙️ Settings (<span id="lang-current-label">English</span>)
+        </button>
+        <div id="lang-menu" style="display:none; position:absolute; right:0; top:110%; background:#fff; border:1px solid var(--line); border-radius:10px; padding:0.4rem; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:100; min-width:140px;"></div>
+      </span>
     </nav>
   </div>
 </header>
@@ -884,6 +889,6 @@ document.getElementById('send').addEventListener('click', (event) => {
 document.getElementById('updated').textContent =
   new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 </script>
-
+<script src="translations.js"></script>
 </body>
 </html>
