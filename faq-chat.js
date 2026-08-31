@@ -54,10 +54,17 @@ const FAQ = [
   {
     keywords: ['vinted', 'account', '18'],
     answer: "Items are listed on Vinted through an account set up and supervised by my parent, since Vinted requires account holders to be 18 or over."
-  }
+  },
+   {
+    keywords: ['other customers', 'directly from you', 'direct from you'],
+    answer: "If you ask Eve, she can show you pictures of items you may like. Just email her at eveswardroberescue@gmail.com."
+  },
+  {
+    keywords: ['other staff', 'staff members', 'Kelley'],
+    answer: "Eve is the founder and co-owner with a supervised adult co-owner. Her brother, mum and dad help also."
 ];
 
-const FALLBACK = "I'm not sure about that one! Try asking about the money split, what I can take, payment timing, or how to check your status — or email eveswardroberescue@gmail.com and I'll help directly.";
+const FALLBACK = "I'm not sure about that one! Maybe ask Eve directly or email her at eveswardroberescue@gmail.com and she will respond as soon as she can.";
 
 function findAnswer(question) {
   const q = question.toLowerCase();
