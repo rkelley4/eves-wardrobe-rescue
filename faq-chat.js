@@ -62,6 +62,7 @@ const FAQ = [
   {
     keywords: ['other staff', 'staff members', 'Kelley'],
     answer: "Eve is the founder and co-owner with a supervised adult co-owner. Her brother, mum and dad help also."
+  }
 ];
 
 const FALLBACK = "I'm not sure about that one! Maybe ask Eve directly or email her at eveswardroberescue@gmail.com and she will respond as soon as she can.";
