@@ -756,20 +756,37 @@ footer {
 </section>
 
 <!-- ========== CONTACT ========== -->
+<!-- ========== CONTACT (simplified) ========== -->
 <section id="contact">
   <div class="wrap reveal">
     <p class="eyebrow">Get started</p>
     <h2>Send me your items.</h2>
-    <p class="lede">Fill this in and it'll open your email app with everything already written. I'll reply with the address and answer any questions first.</p>
+    <p class="lede">Just the essentials — this takes under a minute. I'll confirm I've got your message straight away, and confirm again once your items actually arrive.</p>
 
-    <div class="form">
+    <div class="form" id="contactFormWrap">
       <div class="field">
         <label for="name">Your name</label>
         <input type="text" id="name" placeholder="Jo Bloggs">
       </div>
       <div class="field">
-        <label for="items">What have you got?</label>
-        <textarea id="items" placeholder="About 12 things — mostly women's tops and dresses, size 12, a few with tags still on."></textarea>
+        <label for="email">Your email</label>
+        <input type="email" id="email" placeholder="jo@example.com">
+      </div>
+      <div class="field">
+        <label for="itemCount">Number of items</label>
+        <input type="number" id="itemCount" min="1" placeholder="5">
+      </div>
+      <div class="field">
+        <label for="description">What are they?</label>
+        <input type="text" id="description" placeholder="e.g. 3 dresses, 2 pairs of shoes">
+      </div>
+      <div class="field">
+        <label for="deliveryMethod">How will you get them to me?</label>
+        <select id="deliveryMethod">
+          <option value="post">By post</option>
+          <option value="in-person">Dropping off in person</option>
+          <option value="third-party">Via a friend or family member</option>
+        </select>
       </div>
       <div class="field">
         <label for="cause">Which charity would you like?</label>
@@ -779,11 +796,65 @@ footer {
           <option>The Toy Project</option>
         </select>
       </div>
-      <a class="btn btn-solid" id="send" href="#">Write my email</a>
-      <p class="form-note" style="margin-top:1.2rem">Or email me directly at <strong>eveswardroberescue@gmail.com</p>
+      <button class="btn btn-solid" id="submitBtn" style="width:100%; border:2px solid var(--ink); cursor:pointer;">Send</button>
+      <p class="form-note" style="margin-top:1.2rem">Or email me directly at <strong>eveswardroberescue@gmail.com</strong></p>
+    </div>
+
+    <div id="confirmationMsg" style="display:none; background:#EAF6EC; border:2px solid var(--green); border-radius:14px; padding:1.6rem; margin-top:1rem;">
+      <h3 style="margin-top:0; color:#2E6B3E;">Thanks! ✓</h3>
+      <p style="margin-bottom:0;">I've got your message and sent a confirmation to your email. I'll let you know again once your items actually arrive.</p>
     </div>
   </div>
 </section>
+
+<script>
+// PASTE YOUR APPS SCRIPT WEB APP URL BETWEEN THE QUOTES BELOW
+// (the same one status.html uses, ending in /exec)
+const SUBMIT_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+document.getElementById('submitBtn').addEventListener('click', async (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const itemCount = document.getElementById('itemCount').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const deliveryMethod = document.getElementById('deliveryMethod').value;
+  const cause = document.getElementById('cause').value;
+
+  if (!name || !email || !itemCount || !description) {
+    alert('Please fill in your name, email, number of items, and what they are.');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const formData = new URLSearchParams();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('itemCount', itemCount);
+  formData.append('description', description);
+  formData.append('deliveryMethod', deliveryMethod);
+  formData.append('charity', cause);
+
+  try {
+    await fetch(SUBMIT_URL, {
+      method: 'POST',
+      body: formData,
+      mode: 'no-cors' // Apps Script doesn't send CORS headers for POST; this just fires the request
+    });
+
+    document.getElementById('contactFormWrap').style.display = 'none';
+    document.getElementById('confirmationMsg').style.display = 'block';
+  } catch (err) {
+    alert('Something went wrong sending that. Please try again, or email eveswardroberescue@gmail.com directly.');
+    btn.disabled = false;
+    btn.textContent = 'Send';
+  }
+});
+</script>
 </main>
 
 <!-- ========== FOOTER ========== -->
