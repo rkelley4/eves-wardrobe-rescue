@@ -716,14 +716,51 @@ footer {
 
     <!-- Charity tracker -->
     <div class="tracker">
-      <p class="eyebrow">Raised so far</p>
-      <div class="big-number" id="total" data-target="0">£0</div>
-      <p class="tracker-note">Updated at the end of every month. Last updated: <span id="updated">—</span></p>
-      <div class="tracker-split">
-        <span>Tech She Can £0</span>
-        <span>Little Lives UK £0</span>
-        <span>The Toy Project £0</span>
-      </div>
+  <p class="eyebrow">Raised so far</p>
+  <div class="big-number" id="total">£0</div>
+  <p class="tracker-note">✓ Updated live from our database — no manual entry, ever.</p>
+  <div class="tracker-split" id="charitySplit">
+    <span>Loading breakdown…</span>
+  </div>
+</div>
+
+<script>
+const CHARITY_TOTAL_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+async function loadCharityTotal() {
+  try {
+    const res = await fetch(`${CHARITY_TOTAL_URL}?feed=recent`);
+    const data = await res.json();
+    animateCharityTotal(data.totalCharityRaised || 0);
+
+    const splitEl = document.getElementById('charitySplit');
+    if (data.charityBreakdown && Object.keys(data.charityBreakdown).length > 0) {
+      splitEl.innerHTML = Object.entries(data.charityBreakdown)
+        .map(([name, amount]) => `<span>${name.toUpperCase()} £${amount.toFixed(2)}</span>`)
+        .join('');
+    } else {
+      splitEl.innerHTML = '<span>No sales yet — check back soon!</span>';
+    }
+  } catch (err) {
+    document.getElementById('total').textContent = '£—';
+    document.getElementById('charitySplit').innerHTML = '<span>Couldn\'t load live total right now.</span>';
+  }
+}
+
+function animateCharityTotal(target) {
+  const el = document.getElementById('total');
+  const duration = 1200;
+  const start = performance.now();
+  function frame(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    el.textContent = '£' + Math.round(target * progress);
+    if (progress < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+loadCharityTotal();
+</script>
     </div>
   </div>
 </section>
