@@ -521,7 +521,7 @@ footer {
       <a href="#rules">What to send</a>
       <a href="#charity">Charities</a>
       <a href="#contact">Get in touch</a>
-      <a href="status.html">Check status</a><a href="describe.html"></a>      <span style="position:relative; display:inline-block;">
+      <a href="status.html">Check status</a>    <span style="position:relative; display:inline-block;">
         <button id="settings-toggle" style="background:none; border:1px solid var(--line); border-radius:999px; padding:0.4rem 0.9rem; font-size:0.85rem; cursor:pointer; font-family:inherit;">
           ⚙️ Settings (<span id="lang-current-label">English</span>)
         </button>
@@ -725,7 +725,7 @@ footer {
 </div>
 
 <script>
-const CHARITY_TOTAL_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+const CHARITY_TOTAL_URL = 'https://script.google.com/macros/s/AKfycbxnZQIXd1hPsr-raplsmw4iKD2GrNlSPeez1VUY1Ho0YmYvbBnwYNhcl5UaqMQegTiTkQ/exec';
 
 async function loadCharityTotal() {
   try {
@@ -944,26 +944,6 @@ priceBox.addEventListener('input', updateSplit);
 updateSplit();
 
 /* ============================================================
-   THE CHARITY TOTAL
-   Change data-target="0" in the HTML each month. The number
-   counts up from zero when you scroll it into view.
-   ============================================================ */
-const totalEl = document.getElementById('total');
-const target = parseFloat(totalEl.dataset.target) || 0;
-
-function countUp() {
-  const duration = 1200;
-  const start = performance.now();
-
-  function frame(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    totalEl.textContent = '£' + Math.round(target * progress);
-    if (progress < 1) requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ============================================================
    SCROLL REVEALS
    IntersectionObserver tells us when something scrolls into view.
    ============================================================ */
@@ -971,43 +951,12 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
     entry.target.classList.add('shown');
-    if (entry.target.contains(totalEl)) countUp();
     observer.unobserve(entry.target);
   });
 }, { threshold: 0.15 });
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-/* ============================================================
-   THE CONTACT BUTTON
-   Builds an email from the form. No server needed, which is why
-   this whole site can live on GitHub Pages for free.
-   ============================================================ */
-document.getElementById('send').addEventListener('click', (event) => {
-  event.preventDefault();
-
-  const name  = document.getElementById('name').value  || 'someone';
-  const items = document.getElementById('items').value || '(not filled in)';
-  const cause = document.getElementById('cause').value;
-
-  const subject = 'items to sell — ' + name;
-  const body =
-    'Hi Eve,\n\n' +
-    'I would like you to sell some items for me.\n\n' +
-    'Name: ' + name + '\n\n' +
-    'What I have:\n' + items + '\n\n' +
-    'Charity I would like my 20% to go to: ' + cause + '\n\n' +
-    'Thanks!';
-
-  window.location.href =
-    'mailto:eveswardroberescue@gmail.com'
-    + '?subject=' + encodeURIComponent(subject)
-    + '&body='    + encodeURIComponent(body);
-});
-
-/* Show today's date in the tracker until you set a real one */
-document.getElementById('updated').textContent =
-  new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 </script>
 <script src="translations.js"></script>
 <script src="faq-chat.js"></script>
